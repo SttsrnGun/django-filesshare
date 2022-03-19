@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block body %}
+
+    <div class="container">
+        {% if upload %}
+            <table border=1>
+                <th>
+                    <td>download remaining</td>
+                    <td>upload</td>
+                    <td>expire in</td>
+                </th>
+                
+                {% for item in page_obj %}
+                <tr>
+                    <td>
+                        <a href="{% url "detail" item.id %}">{{ item.name }}</a>
+                    </td>
+                    <td>
+                        {{ item.max_downloads }}
+                    </td>
+                    <td>
+                        {{ item.created_at }}
+                    </td>
+                    <td>
+                        {{ item.expired_at }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+            <br/>
+            <!-- Start pagination Section -->
+            <section>
+                <span class="current">Page {{ page_obj.number }} of <a href="?page={{ page_obj.paginator.num_pages }}">{{ page_obj.paginator.num_pages }}</i></a>.</span>
+                    {{ page_obj. }}
+                    <br/>
+                    <br/>
+                    {% if page_obj.has_previous %}
+                        <a href="{% url "list" %}?page={{ 1 }}">&laquo;</a>
+                        |
+                        <a href="{% url "list" %}?page={{ page_obj.previous_page_number }}">&lt;</a>
+                    {% endif %}
+
+                    {% for i in page_range|default_if_none:page_obj.paginator.get_elided_page_range %}
+                        {% if page_obj.number == i %}
+                            <a href="?page={{ i }}">{{ i }}<span class="sr-only">(current)</span></a>
+                            |
+                        {% else %}
+                            {% if i == page_obj.paginator.ELLIPSIS %}
+                                {{ i }}
+                                |
+                            {% else %}
+                                <a href="?page={{ i }}">{{ i }}</a>
+                                |
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <a href="{% url "list" %}?page={{ page_obj.next_page_number }}">&gt;</a>
+                        |
+                        <a href="{% url "list" %}?page={{ page_obj.paginator.num_pages }}">&raquo;</a>
+                    {% endif %}
+            </section>
+            <!-- End pagination Section -->
+            
+        {% else %}
+            <strong>
+                No file are available.
+            </strong>
+        {% endif %}
+    </div>
+
+{% endblock %}

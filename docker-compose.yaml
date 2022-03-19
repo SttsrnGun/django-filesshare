@@ -1,0 +1,43 @@
+version: '2.1'
+# source https://testdriven.io/blog/dockerizing-django-with-postgres-gunicorn-and-nginx
+services:
+  app:
+    build: .
+    environment: 
+      ALLOWED_HOSTS: app,localhost
+      DJANGO_CSRF_TRUSTED_ORIGINS: http://localhost:1337 # your domain
+      DEBUG: False
+      DATABASE_URL: sqlite:///db.sqlite3
+    expose:
+      - 8000
+    deploy:
+      replicas: 3
+    volumes:
+      - .:/app
+      - database:/db.sqlite3
+      - media:/media
+    networks:
+      - appnet
+  nginx:
+    build: ./nginx
+    ports:
+      - 1337:80
+    depends_on:
+      - app
+    networks:
+      - appnet
+  scheduler:
+    build: 
+      context: .
+      dockerfile: scheduler/Dockerfile
+    depends_on:
+      - app
+    networks:
+      - appnet
+
+networks:
+  appnet:
+
+volumes:
+  database: {}
+  media: {}

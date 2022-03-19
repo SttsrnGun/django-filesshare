@@ -1,0 +1,1 @@
+*/30 * * * * curl app:8000/api/upload/clearfile

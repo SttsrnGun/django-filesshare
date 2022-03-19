@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block body %}
+
+<h1>{{ object.name }}</h1>
+	{% comment %} <h3>size: {{ object.file.size|filesizeformat }}</h3> {% endcomment %}
+	<h4>download remaining: {{ object.max_downloads }}</h4>
+	{% comment %} <h4>uploaded: {{ object.created_at }}</h4> {% endcomment %}
+	<h4>expire in: {{ object.expired_at }}</h4>
+
+	<form action="{% url "download" object.id %}" method="POST" target="_blank">
+	{% if object.max_downloads %}
+		{% if object.password %}
+			<p>Password: <input name="password" type="password" required></p>
+			{% if form.errors %}
+				{% for field in form %}
+					{% for error in field.errors %} 
+						<ul>
+							<li style="color:red">{{ error|escape }}</li>
+						</ul>
+					{% endfor %}
+				{% endfor %}
+			{% endif %}
+		{% endif %}
+
+		{% csrf_token %}
+		<p><input type="submit" value="Download"></p>
+	{% endif %}
+	{% if request.user == object.user %}
+		<a href="{% url "delete" object.id %}">Delete</a>
+	{% endif %}
+	</form>
+
+
+
+
+{% endblock %}

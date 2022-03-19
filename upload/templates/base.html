@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>{% block title %}Send{% endblock %}</title>
+</head>
+<body>
+
+<hr/>
+{% if request.user.is_authenticated %}
+	<p><a href="{% url "list" %}">{{ request.user.username }}</a></p>
+	<p><a href="{% url "upload" %}">upload</a></p>
+	<p><a href="{% url "logout" %}">logout</a></p>
+{% else %}
+	<p><a href="{% url "login" %}">login</a></p>
+{% endif %}
+<hr/>
+
+{% block body %}{% endblock %}
+
+</body>
+</html>

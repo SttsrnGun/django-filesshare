@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block body %}
+<form action="/" method="POST" enctype="multipart/form-data">
+	{{ form.as_p }} 
+	{% comment %} <p>{{ form.file }}</p>
+
+	{% if form.file.errors %}
+		<ol>
+		{% for error in form.file.errors %}
+			<li><strong>{{ error|escape }}</strong></li>
+		{% endfor %}
+		</ol>
+	{% endif %}
+
+	<p>Password: {{form.password}} (optional)</p>
+	<p>Expires in: {{form.max_downloads}} or {{form.expire_duration}}</p> {% endcomment %}
+	{% csrf_token %}
+	<p><input type="submit" value="Upload"></p>
+</form>
+{% endblock %}
